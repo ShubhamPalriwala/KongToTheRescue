@@ -1,0 +1,50 @@
+_format_version: "1.1"
+services:
+- connect_timeout: 60000
+  host: github.com
+  name: service-to-my-github
+  path: /shubhampalriwala
+  plugins:
+  - config:
+      request_header: Hello-World
+      response_header: Github-Externship
+      ttl: 600
+    enabled: true
+    name: kluaong
+    protocols:
+    - grpc
+    - grpcs
+    - http
+    - https
+  port: 443
+  protocol: https
+  read_timeout: 60000
+  retries: 5
+  routes:
+  - hosts:
+    - mygithub.com
+    https_redirect_status_code: 426
+    id: 33a73493-f489-4f9d-a2d2-e87322fe7fa3
+    path_handling: v0
+    preserve_host: false
+    protocols:
+    - http
+    - https
+    regex_priority: 0
+    request_buffering: true
+    response_buffering: true
+    strip_path: true
+  - hosts:
+    - manutd.com
+    https_redirect_status_code: 426
+    id: 3df763cf-3e12-4d99-9595-d8bd5c25deaf
+    path_handling: v0
+    preserve_host: false
+    protocols:
+    - http
+    - https
+    regex_priority: 0
+    request_buffering: true
+    response_buffering: true
+    strip_path: true
+  write_timeout: 60000

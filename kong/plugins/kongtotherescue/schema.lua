@@ -14,12 +14,9 @@ local schema = {
         type = "record",
         fields = {
           -- a standard defined field (typedef), with some customizations
-          { request_header = typedefs.header_name {
-              required = true,
-              default = "Hello-World" } },
           { response_header = typedefs.header_name {
               required = true,
-              default = "Github-Externship" } },
+              default = "is-suspicious" } },
           { ttl = { -- self defined field
               type = "integer",
               default = 600,

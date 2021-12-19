@@ -1,6 +1,3 @@
-# to test our plugin
-sudo ~/.local/bin/pongo run
-
 # to start the kong shell
 sudo ~/.local/bin/pongo shell
 

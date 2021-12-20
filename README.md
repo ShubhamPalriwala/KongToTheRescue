@@ -26,7 +26,10 @@ This repo has 2 branches:
 ## How to use
 
 ### Via Docker Compose:
-Run the following command in the `kong-to-the-rescue` directory:
+1. Clone the repo using `git clone https://github.com/ShubhamPalriwala/KongToTheRescue.git`
+2. Get into the project directory `cd KongToTheRescue`
+
+3. Run the following command in your terminal:
 ```sh
 docker-compose up
 ```

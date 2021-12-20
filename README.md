@@ -1,12 +1,14 @@
 # KongToTheRescue
 
-A Kong API Gateway Plugin that forbids the requests that are potentially harmful to the system
+A Kong API Gateway Plugin that adds an `is-suspicious` header to the response for any potentially harmful requests to the system
 
 As of now, we test for:
 
 - SQL Injection
 - XSS (Cross Site Scripting)
 - Directory Traversal
+
+Currently we add it to the response header only to verify the legitimacy but later we can add it to the request header itself so that one can discard such requests before even processing them on the server.
 
 ## KongToTheRescue Architecture
 
@@ -27,14 +29,39 @@ This repo has 2 branches:
 2. Clone the repo using `git clone https://github.com/ShubhamPalriwala/KongToTheRescue.git`
 3. Get into the project directory `cd KongToTheRescue`
 4. Start a pongo shell, run `pongo shell` (if pongo isn't added to the path, then use `~/.local/bin/pongo shell`)
-5. Once you are in the pongo shell, run the `./config.sh` script present in the root directory of this repo.
+5. Once you are in the pongo shell, run the `./config.sh` script present in the root directory of this repo or just copy and pase the below commands:
+
+```sh
+kong migrations bootstrap --force
+kong start
+
+# create service
+curl -i -X POST \
+ --url http://localhost:8001/services/ \
+ --data 'name=service-to-my-github' \
+ --data 'url=https://shubhampalriwala.github.io/'
+
+# create route
+curl -i -X POST \
+ --url http://localhost:8001/services/service-to-my-github/routes \
+ --data 'hosts[]=mychapter.com'
+
+# add plugin
+curl -i -X POST \
+ --url http://localhost:8001/services/service-to-my-github/plugins/ \
+ --data 'name=kongtotherescue'
+```
+
 6. Now test the plugin by running `curl -I -H "Host: mychapter.com" http://localhost:8000/`
 
 ## File Structure
 
 Inside kong/plugins/kongtotherescue, you’ll see two files:
 
-- `handler.lua`: This is where the main functionality of your plugin resides. Each phase of the request/response lifecycle has a function, which the plugin implements to provide custom behavior. Basically the logic of the plugin
+- `handler.lua`: This is where the main functionality of your plugin resides. Each phase of the request/response lifecycle has a function, which the plugin implements to provide custom behavior. Basically the logic of the plugin.
+  - plugin:initworker(): This is the first function called when the plugin is loaded and is used to initialize the plugin.
+  - plugin:access(): This is the next function that is called when the plugin is loaded and is used to fetch data for our plugin from the request.
+  - plugin:header_filter(): This is the next and the last function (for now) that is called when the plugin is loaded and is used to modify the headers of the request as per our requirements.
 
 In handler.lua, one can have several methods that take the form of function plugin:<name>. These methods run during the execution lifecycle of Kong. The complete list of their descriptions in the API reference documentation.
 

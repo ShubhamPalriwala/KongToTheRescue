@@ -1,16 +1,10 @@
--- If you're not sure your plugin is executing, uncomment the line below and restart Kong
--- then it will throw an error which indicates the plugin is being loaded at least.
--- assert(ngx.get_phase() == "timer", "The world is coming to an end!")
----------------------------------------------------------------------------------------------
--- In the code below, just remove the opening brackets; `[[` to enable a specific handler
---
--- The handlers are based on the OpenResty handlers, see the OpenResty docs for details
--- on when exactly they are invoked and what limitations each handler has.
----------------------------------------------------------------------------------------------
 local plugin = {
     PRIORITY = 1000, -- set the plugin priority, which determines plugin execution order
     VERSION = "0.1"
 }
+
+local req_url_path = ""
+local req_body = ""
 
 local function directory_traversal_attack(request_path)
     return request_path:find("%.%.") ~= nil
@@ -28,7 +22,7 @@ local function sqli_attack(request_body)
                       "PASSWORDS", "ROLE", "ROLES", "GRANT", "REVOKE", "PROCEDURE", "FUNCTION", "TRIGGER", "VIEW",
                       "INTO"}
 
-    for sql_keyword in pairs(keywords) do
+    for _, sql_keyword in pairs(keywords) do
         if request_body:find(sql_keyword) then
             return true
         end
@@ -44,13 +38,21 @@ local function is_an_attack(request_path, request_body)
 end
 
 function plugin:init_worker()
+    kong.log.debug("'init_worker' handler called")
 
-    kong.log.debug("saying hi from the 'init_worker' handler")
-    local req_body = kong.request.get_raw_body()
-    local req_url_path = kong.request.get_path()
-    if is_an_attack(req_url_path, req_body) then
-        kong.response.exit(403, "Forbidden")
-    end
+end
+
+function plugin:access()
+
+    req_body = kong.request.get_raw_body()
+    req_url_path = kong.request.get_path()
+
+end
+
+function plugin:header_filter(plugin_conf)
+
+    local is_suspicious = is_an_attack(req_url_path, req_body)
+    kong.response.set_header(plugin_conf.response_header, is_suspicious)
 
 end
 

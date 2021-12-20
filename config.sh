@@ -14,7 +14,7 @@ curl -i -X POST \
 # create route
 curl -i -X POST \
  --url http://localhost:8001/services/service-to-my-github/routes \
- --data 'hosts[]=mychapter.com'
+ --data 'hosts[]=localhost'
 
 # add plugin
 curl -i -X POST \

@@ -23,6 +23,14 @@ services:
       timeout: 5s
       retries: 5
 
+  kongtotherescue:
+    image: laalshaitaan/kongtotherescue:latest
+    depends_on:
+      - kong-database
+    network_mode: "host"
+    restart: on-failure
+
+
   # Kong DB migration
   kong-migration:
     image: kong:latest
@@ -53,6 +61,8 @@ services:
       KONG_PROXY_LISTEN: 0.0.0.0:8000
       KONG_PROXY_LISTEN_SSL: 0.0.0.0:8443
       KONG_ADMIN_LISTEN: 0.0.0.0:8001
+      KONG_LUA_PACKAGE_PATH: ./kong/plugins/?.lua
+      CUSTOM_PLUGINS: kongtotherescue
     depends_on:
       - kong-migration
       - kong-database
@@ -64,7 +74,7 @@ services:
     ports:
       - "8001:8001"
       - "8000:8000"
-    
+      
   # kong-pongo:
   #   image: alpine:latest
   #   depends_on:
@@ -78,18 +88,22 @@ services:
   #     - -c
   #     - |
   #       apk add git curl docker-compose
-  #       cd ~
-  #       git clone https://github.com/Kong/kong-pongo.git
-  #       mkdir -p $HOME/.local/bin
-  #       ln -s $$(realpath ./kong-pongo/pongo.sh) $HOME/.local/bin/pongo
-  #       export PATH=$PATH:$HOME/.local/bin
-  #       cd /pongo_wd
-  #       git clone https://github.com/ShubhamPalriwala/kongtotherescue.git
-  #       cd kongtotherescue
-  #       pongo shell
   #       curl -i -X POST --url http://localhost:8001/services/ --data 'name=service-to-my-github' --data 'url=https://shubhampalriwala.github.io/'
   #       curl -i -X POST --url http://localhost:8001/services/service-to-my-github/routes --data 'hosts[]=localhost'
   #       curl -i -X POST --url http://localhost:8001/services/service-to-my-github/plugins/ --data 'name=kongtotherescue'
+
+  #     # cd $HOME
+  #       # git clone https://github.com/Kong/kong-pongo.git
+        
+  #       # ./kong-pongo/pongo.sh
+
+  #       # mkdir -p $HOME/.local/bin
+  #       # ln -s $$(realpath ./kong-pongo/pongo.sh) $HOME/.local/bin/pongo
+  #       # export PATH=$PATH:$HOME/.local/bin
+
+  #       # git clone https://github.com/ShubhamPalriwala/kongtotherescue.git
+  #       # cd kongtotherescue
+  #       # pongo shell
 
 
   # alpineLinux:

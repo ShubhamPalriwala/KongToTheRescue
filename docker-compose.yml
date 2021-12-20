@@ -7,7 +7,7 @@ networks:
 services:
   # Postgres: The database used by Kong
   kong-database:
-    image: postgres:9.6
+    image: postgres:12.2
     restart: on-failure
     networks:
       - kong-net
@@ -22,14 +22,6 @@ services:
       interval: 5s
       timeout: 5s
       retries: 5
-
-  kongtotherescue:
-    image: laalshaitaan/kongtotherescue:latest
-    depends_on:
-      - kong-database
-    network_mode: "host"
-    restart: on-failure
-
 
   # Kong DB migration
   kong-migration:
@@ -49,7 +41,7 @@ services:
 
   # Kong CLI
   kong:
-    image: kong:latest
+    image: laalshaitaan/kongtotherescue:latest
     restart: on-failure
     networks:
       - kong-net
@@ -74,55 +66,22 @@ services:
     ports:
       - "8001:8001"
       - "8000:8000"
-      
-  # kong-pongo:
-  #   image: alpine:latest
-  #   depends_on:
-  #     - kong-migration
-  #     - kong-database
-  #     - kong
-  #   network_mode: "host"
-  #   restart: on-failure
-  #   command:
-  #     - /bin/sh
-  #     - -c
-  #     - |
-  #       apk add git curl docker-compose
-  #       curl -i -X POST --url http://localhost:8001/services/ --data 'name=service-to-my-github' --data 'url=https://shubhampalriwala.github.io/'
-  #       curl -i -X POST --url http://localhost:8001/services/service-to-my-github/routes --data 'hosts[]=localhost'
-  #       curl -i -X POST --url http://localhost:8001/services/service-to-my-github/plugins/ --data 'name=kongtotherescue'
 
-  #     # cd $HOME
-  #       # git clone https://github.com/Kong/kong-pongo.git
+  alpineLinux:
+    image: alpine:latest
+    depends_on:
+      - kong-migration
+      - kong-database
+      - kong
+    network_mode: "host"
+
+    command:
+      - /bin/sh
+      - -c
+      - |
+        apk add curl
+        apk add git
         
-  #       # ./kong-pongo/pongo.sh
-
-  #       # mkdir -p $HOME/.local/bin
-  #       # ln -s $$(realpath ./kong-pongo/pongo.sh) $HOME/.local/bin/pongo
-  #       # export PATH=$PATH:$HOME/.local/bin
-
-  #       # git clone https://github.com/ShubhamPalriwala/kongtotherescue.git
-  #       # cd kongtotherescue
-  #       # pongo shell
-
-
-  # alpineLinux:
-  #   image: alpine:latest
-  #   depends_on:
-  #     - kong-migration
-  #     - kong-database
-  #     - kong
-  #   network_mode: "host"
-  #   command:
-  #     - /bin/sh
-  #     - -c
-  #     - |
-  #       apk add curl
-  #       apk add git
-  #       git clone https://github.com/ShubhamPalriwala/kongtotherescue.git
-  #       mkdir -p /usr/local/share/lua/5.1/kong/plugins
-  #       cp -r ./kongtotherescue /usr/local/share/lua/5.1/kong/plugins
-
-  #       curl -i -X POST --url http://localhost:8001/services/ --data 'name=service-to-my-github' --data 'url=https://shubhampalriwala.github.io/'
-  #       curl -i -X POST --url http://localhost:8001/services/service-to-my-github/routes --data 'hosts[]=localhost'
-  #       curl -i -X POST --url http://localhost:8001/services/service-to-my-github/plugins/ --data 'name=kongtotherescue'
+        curl -i -X POST --url http://localhost:8001/services/ --data 'name=service-to-my-github' --data 'url=https://shubhampalriwala.github.io/'
+        curl -i -X POST --url http://localhost:8001/services/service-to-my-github/routes --data 'hosts[]=localhost'
+        curl -i -X POST --url http://localhost:8001/services/service-to-my-github/plugins/ --data 'name=kongtotherescue'

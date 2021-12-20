@@ -25,11 +25,20 @@ This repo has 2 branches:
 
 ## How to use
 
+### Via Docker Compose:
+Run the following command in the `kong-to-the-rescue` directory:
+```sh
+docker-compose up
+```
+Now feel free to test out the plugin by accessing [http://localhost:8000/](http://localhost:8000/) and look for the header `is-suspicious` in the response. Happy messing around.
+
+### Via Kong-Pongo
+
 1. Install [Kong-Pongo CLI](https://github.com/Kong/kong-pongo)
 2. Clone the repo using `git clone https://github.com/ShubhamPalriwala/KongToTheRescue.git`
 3. Get into the project directory `cd KongToTheRescue`
 4. Start a pongo shell, run `pongo shell` (if pongo isn't added to the path, then use `~/.local/bin/pongo shell`)
-5. Once you are in the pongo shell, run the `./config.sh` script present in the root directory of this repo or just copy and pase the below commands:
+5. Once you are in the pongo shell, run the following scriptx:
 
 ```sh
 kong migrations bootstrap --force
@@ -52,7 +61,7 @@ curl -i -X POST \
  --data 'name=kongtotherescue'
 ```
 
-6. Now test the plugin by running `curl -I -H "Host: mychapter.com" http://localhost:8000/`
+Now feel free to test out the plugin by accessing [http://localhost:8000/](http://localhost:8000/) and look for the header `is-suspicious` in the response. Happy messing around.
 
 ## File Structure
 

@@ -22,9 +22,9 @@ services:
     retries: 5
     routes:
       - hosts:
-          - mychapter.com
+          - localhost
         https_redirect_status_code: 426
-        id: 32bf52c8-d441-4cbc-95a5-bc712047c0ff
+        id: 821a8b20-3904-4a78-800d-f58d8363535d
         path_handling: v0
         preserve_host: false
         protocols:

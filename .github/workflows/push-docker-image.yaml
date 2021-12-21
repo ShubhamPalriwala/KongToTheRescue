@@ -1,0 +1,24 @@
+name: Push Image to Dockerhub
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build-and-push-image:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: docker login
+        env:
+          DOCKER_USERNAME: ${{secrets.DOCKER_USERNAME}}
+          DOCKER_PASSWORD: ${{secrets.DOCKER_PASSWORD}}
+        run: |
+          docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+      - name: build image
+        run: |
+          docker build . --file Dockerfile --tag laalshaitaan/kongtotherescue:latest
+      - name: push image
+        run: |
+          docker push laalshaitaan/kongtotherescue:latest

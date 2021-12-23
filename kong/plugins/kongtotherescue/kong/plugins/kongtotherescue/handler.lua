@@ -53,6 +53,8 @@ end
 function plugin:header_filter(plugin_conf)
 
     local is_suspicious = is_an_attack(req_url_path, req_body)
+    -- If you want to drop the request all together, just uncomment the below line
+    -- kong.response.exit(403, "Forbidden")
     kong.response.set_header(plugin_conf.response_header, is_suspicious)
 
 end

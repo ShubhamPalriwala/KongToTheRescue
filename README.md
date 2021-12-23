@@ -10,18 +10,18 @@ As of now, we test for:
 
 Currently we add it to the response header only to verify the legitimacy but later we can add it to the request header itself so that one can discard such requests before even processing them on the server.
 
+#### This repo has 2 branches:
+
+1. [master](https://github.com/ShubhamPalriwala/KongToTheRescue/tree/master):
+   Has a custom plugin that detects suspicious requests
+2. [block-ip-plugin](https://github.com/ShubhamPalriwala/KongToTheRescue/tree/block-ip-plugin):
+   Has a simple Lua web server that has been proxied via Kong to block certain IP addresses.
+
 ## KongToTheRescue Architecture
 
 ![KongToTheRescue Architecure](./assets/arch.png)
 
 Currently, the plugin is only used for testing purposes. And has been created while I was exploring Kong.
-
-This repo has 2 branches:
-
-1. master:
-   Has the custom plugin code
-2. block-ip-plugin:
-   Has a simple Lua web server that has been proxied via Kong to block certain IP addresses.
 
 ## How to use:
 

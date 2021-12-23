@@ -12,7 +12,7 @@ Currently we add it to the response header only to verify the legitimacy but lat
 
 ## KongToTheRescue Architecture
 
-![KongToTheRescue Architecure](./arch.png)
+![KongToTheRescue Architecure](./assets/arch.png)
 
 Currently, the plugin is only used for testing purposes. And has been created while I was exploring Kong.
 
@@ -26,14 +26,19 @@ This repo has 2 branches:
 ## How to use
 
 ### Via Docker Compose:
+
 1. Clone the repo using `git clone https://github.com/ShubhamPalriwala/KongToTheRescue.git`
 2. Get into the project directory `cd KongToTheRescue`
 
 3. Run the following command in your terminal:
+
 ```sh
 docker-compose up
 ```
+
 Now feel free to test out the plugin by accessing [http://localhost:8000/](http://localhost:8000/) and look for the header `is-suspicious` in the response. Happy messing around.
+
+Now to **access Kong Admin UI**, check out [Using Konga GUI](#using-konga-gui)
 
 ### Via Kong-Pongo
 
@@ -65,6 +70,24 @@ curl -i -X POST \
 ```
 
 Now feel free to test out the plugin by accessing [http://localhost:8000/](http://localhost:8000/) and look for the header `is-suspicious` in the response. Happy messing around.
+Now to **access Kong Admin UI**, check out the [Using Konga GUI](#using-konga-gui)
+
+## Using Konga GUI
+
+1. Visit `localhost:1337`
+2. Register with your details (don't worry they are stored in your docker Postgres DB itself and does not go out)
+3. Now login with those credentials
+4. To connect to the Kong Admin API, we need to find the IP of our kong instance, for that, run:
+
+```sh
+$ sudo docker network inspect kong-net | grep Gateway
+"Gateway": "172.20.0.1"
+```
+
+5. Now enter a uniue connection name and this IP appended with port 8001 on the Konga GUI as `http://<your-gateway-ip>:8001`
+
+6. That's it! Now explore around the Konga GUI where you can also see out **KongTotheRescue** live!
+   ![KongToTheRescue Live on Konga](./assets/konga-gui.png)
 
 ## File Structure
 

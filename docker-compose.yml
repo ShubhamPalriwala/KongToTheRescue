@@ -7,7 +7,7 @@ networks:
 services:
   # Postgres: The database used by Kong
   kong-database:
-    image: postgres:12.2
+    image: postgres:11.5
     restart: on-failure
     networks:
       - kong-net
@@ -66,6 +66,41 @@ services:
     ports:
       - "8001:8001"
       - "8000:8000"
+
+  konga-prepare:
+    image: pantsel/konga:next
+    command: "-c prepare -a postgres -u postgresql://kong:kong@kong-database:5432/konga_db"
+    environment:
+      DB_ADAPTER: postgres
+      DB_HOST: kong-database
+      DB_USER: kong
+      DB_PASSWORD: kong
+    networks:
+      - kong-net
+    restart: on-failure
+    links:
+      - kong-database
+    depends_on:
+      - kong-database
+
+  konga:
+    image: pantsel/konga:next
+    restart: always
+    networks:
+        - kong-net
+    environment:
+      DB_ADAPTER: postgres
+      DB_HOST: kong-database
+      DB_USER: kong
+      DB_PASSWORD: kong
+      TOKEN_SECRET: doesnt-matter-because-not-signing-jwt
+      DB_DATABASE: konga_db
+      # NODE_ENV: production
+      # prevents creation of table and default is dev which creates table if it does not exist
+    depends_on:
+      - kong-database
+    ports:
+      - "1337:1337"
 
   alpineLinux:
     image: alpine:latest

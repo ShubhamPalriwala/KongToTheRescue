@@ -43,9 +43,10 @@ function plugin:init_worker()
 end
 
 function plugin:access()
-
     req_body = kong.request.get_raw_body()
     req_url_path = kong.request.get_path()
+    req_body = string.upper(req_body)
+    req_url_path = string.upper(req_url_path)
 
 end
 

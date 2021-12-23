@@ -23,9 +23,7 @@ This repo has 2 branches:
 2. block-ip-plugin:
    Has a simple Lua web server that has been proxied via Kong to block certain IP addresses.
 
-## How to use
-
-### Via Docker Compose:
+## How to use:
 
 1. Clone the repo using `git clone https://github.com/ShubhamPalriwala/KongToTheRescue.git`
 2. Get into the project directory `cd KongToTheRescue`
@@ -38,41 +36,7 @@ docker-compose up
 
 Now feel free to test out the plugin by accessing [http://localhost:8000/](http://localhost:8000/) and look for the header `is-suspicious` in the response. Happy messing around.
 
-Now to **access Kong Admin UI**, check out [Using Konga GUI](#using-konga-gui)
-
-### Via Kong-Pongo
-
-1. Install [Kong-Pongo CLI](https://github.com/Kong/kong-pongo)
-2. Clone the repo using `git clone https://github.com/ShubhamPalriwala/KongToTheRescue.git`
-3. Get into the project directory `cd KongToTheRescue`
-4. Start a pongo shell, run `pongo shell` (if pongo isn't added to the path, then use `~/.local/bin/pongo shell`)
-5. Once you are in the pongo shell, run the following scriptx:
-
-```sh
-kong migrations bootstrap --force
-kong start
-
-# create service
-curl -i -X POST \
- --url http://localhost:8001/services/ \
- --data 'name=service-to-my-github' \
- --data 'url=https://shubhampalriwala.github.io/'
-
-# create route
-curl -i -X POST \
- --url http://localhost:8001/services/service-to-my-github/routes \
- --data 'hosts[]=mychapter.com'
-
-# add plugin
-curl -i -X POST \
- --url http://localhost:8001/services/service-to-my-github/plugins/ \
- --data 'name=kongtotherescue'
-```
-
-Now feel free to test out the plugin by accessing [http://localhost:8000/](http://localhost:8000/) and look for the header `is-suspicious` in the response. Happy messing around.
-Now to **access Kong Admin UI**, check out the [Using Konga GUI](#using-konga-gui)
-
-## Using Konga GUI
+## Accessing Kong Admin API using Konga GUI
 
 1. Visit `localhost:1337`
 2. Register with your details (don't worry they are stored in your docker Postgres DB itself and does not go out)
@@ -102,6 +66,6 @@ In handler.lua, one can have several methods that take the form of function plug
 
 - `schema.lua`: If the plugin requires additional configuration, such as key/value pairs a user can provide to alter behavior, the logic for that is stored here.
 
-PS: I will be wokring on this to make it production ready soon and will release a release.
+PS: I will be working on this to make it production ready soon and will release a release.
 
 <p align="center">I hope this plugin will make me more Credible soon enough :)</p>
